@@ -24,6 +24,7 @@ docker-compose up -d
 docker-compose exec hive bash
 ```
 
+4) En el directorio files se pueden copiar los datasets para introducir los datos
 
 
 
