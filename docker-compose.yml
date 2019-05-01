@@ -32,6 +32,7 @@ services:
       - "10000:10000"
     volumes:
       - ./files:/opt/files
+      - ./conf/hive-site.xml:/opt/hive/conf/hive-site.xml
   hive-metastore:
     image: bde2020/hive:2.3.2-postgresql-metastore
     env_file:
