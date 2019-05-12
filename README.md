@@ -21,7 +21,7 @@ docker-compose up -d
 ```
 3) Una vez haya arrancado loguearse en la console
 ```bash
-docker-compose exec hive bash
+docker-compose exec hive-server bash
 ```
 
 4) En el directorio files se pueden copiar los datasets para introducir los datos
