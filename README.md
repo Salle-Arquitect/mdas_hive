@@ -24,9 +24,12 @@ docker-compose up -d
 docker-compose exec hive-server bash
 ```
 
-4) En el directorio files se pueden copiar los datasets para introducir los datos
+4) Para acceder a la shell de hive una vez dentro de la console
+```bash
+/opt/hive/bin/beeline -u jdbc:hive2://localhost:10000
+```
 
-
+5) En el directorio files se pueden copiar los datasets para introducir los datos
 
 
 ## Contributors
