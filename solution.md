@@ -1,4 +1,4 @@
-# Para poder trabajar con los datos en Hive, lo primero que debemos hacer es cargar los datos.
+# 1) Para poder trabajar con los datos en Hive, lo primero que debemos hacer es cargar los datos.
 
 ## Subir el fichero a importar en un directorio de HDFS
 ```bash
