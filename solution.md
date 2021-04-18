@@ -40,3 +40,20 @@ LOCATION '/mdas/'
 -- Se define la ubicación de los datos
 TBLPROPERTIES ("skip.header.line.count"="1");
 ```
+
+Transformamos la tabla
+```hive
+DROP TABLE IF EXISTS call_registry;
+CREATE TABLE call_registry as
+SELECT
+	id,
+	type,
+	from_number,
+	to_number,
+	cast(regexp_replace(start_timestamp, '(\\d++)/(\\d++)/(\\d++)\\s++(\\d++):(\\d++)', '$3-$2-$1 $4:$5:00.000') as timestamp) as start_timestamp,
+	cast(regexp_replace(end_timestamp,   '(\\d++)/(\\d++)/(\\d++)\\s++(\\d++):(\\d++)', '$3-$2-$1 $4:$5:00.000') as timestamp) as end_timestamp,
+	cast(regexp_replace(price, ',', '.') as float) AS price,
+	call_result,
+	event_date
+FROM tmp_input;
+```
