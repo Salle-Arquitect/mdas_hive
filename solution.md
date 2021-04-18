@@ -57,3 +57,9 @@ SELECT
 	event_date
 FROM tmp_input;
 ```
+
+Una vez comprovado que no queda ningún NULL podemos eliminar la tabla temporal:
+```hive
+SELECT * FROM call_registry;
+DROP TABLE tmp_input;
+```
