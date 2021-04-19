@@ -79,6 +79,7 @@ SELECT DISTINCT call_result FROM call_registry WHERE type = 'CALL';
 ```
 
 # 3) Encuentra qué usuario se ha gastado más dinero en SMS que no han llegado a su destinatario (FAIL).
+Ya que no hay ningún campo que sea usuario, interpretaremos que el usuario es el número de teléfono:
 ```hive
 WITH SMS_FAIL as (
 	SELECT type,from_number,call_result,price
@@ -168,7 +169,9 @@ FROM (
 	SELECT type,from_number,SUM(price) AS price
 	FROM call_registry
 	WHERE type = 'CALL'
-	GROUP BY from_number,type ORDER BY price  DESC LIMIT 5
+	GROUP BY from_number,type
+	ORDER BY price DESC
+	LIMIT 5
 ) AS t
 UNION
 SELECT *
@@ -180,9 +183,27 @@ FROM (
 	ORDER BY price DESC
 	LIMIT 5
 ) AS d;
++-----------+------------------+---------------------+
+| _u1.type  | _u1.from_number  |      _u1.price      |
++-----------+------------------+---------------------+
+| CALL      | 253823721        | 10.367999970912933  |
+| CALL      | 460946633        | 10.277999877929688  |
+| CALL      | 516108166        | 10.241999965161085  |
+| CALL      | 516644706        | 10.06199997663498   |
+| CALL      | 883936752        | 11.682000160217285  |
+| SMS       | 324415062        | 2.75                |
+| SMS       | 421315475        | 2.75                |
+| SMS       | 470837434        | 2.75                |
+| SMS       | 637639552        | 2.75                |
+| SMS       | 658806303        | 2.75                |
++-----------+------------------+---------------------+
 ```
 
-# 8) TODO
+# 8) ¿Has conseguido mostrar el mismo resultado en las preguntas 6 y 7? ¿Por qué?  Justifica la respuesta.
+Todos los elementos mostrados en la pregunta 7 aparecen en el 6. El 6 da un valor de posición, haciendo que después de 8 primeros, la siguiente posición será el noveno, esto permite que haya múltiples en la misma posición a diferencia del 7, que simplemente limita la salida a una establecida, dando cierto orden de aleatoriedad entre los que tengan el mismo valor (los que entran dentro del rank).
+
+
+En el mundo del futbol, se usa el método del rank, haciendo que al inicio de temporada haya muchos primeros y a medida que avanza la temporada quede solo 1.
 
 # 9) Realiza **una** consulta que muestre los usuarios y la cantidad total de tiempo (en segundos) que han estado en una llamada durante el mes de diciembre de 2018 (hay que tener en cuenta tanto llamadas realizadas como recibidas).  Filtra los resultados para mostrar sólo aquellos usuarios que han estado más de 3 horas al teléfono.
 ```hive
@@ -190,21 +211,15 @@ SELECT *
 FROM (
 	SELECT user_phone,sum(duration) as total
 	FROM (
-		SELECT user_phone,duration
-		FROM (
-			SELECT from_number AS user_phone, INT(end_timestamp)-INT(start_timestamp) AS duration
-			FROM call_registry
-			WHERE type = 'CALL'
-				AND start_timestamp between '2018-12-01 00:00:00.00' and '2018-12-31 23:59:59.0'
-		) AS t
+		SELECT from_number AS user_phone, INT(end_timestamp)-INT(start_timestamp) AS duration
+		FROM call_registry
+		WHERE type = 'CALL'
+			AND start_timestamp between '2018-12-01 00:00:00.00' and '2018-12-31 23:59:59.0'
 		UNION
-		SELECT user_phone,duration
-		FROM (
-			SELECT to_number AS user_phone, INT(end_timestamp)-INT(start_timestamp) AS duration
-			FROM call_registry
-			WHERE type = 'CALL'
-				AND start_timestamp between '2018-12-01 00:00:00.00' and '2018-12-31 23:59:59.0'
-		) AS d
+		SELECT to_number AS user_phone, INT(end_timestamp)-INT(start_timestamp) AS duration
+		FROM call_registry
+		WHERE type = 'CALL'
+			AND start_timestamp between '2018-12-01 00:00:00.00' and '2018-12-31 23:59:59.0'
 	) as t
 	GROUP BY user_phone
 ) AS t
